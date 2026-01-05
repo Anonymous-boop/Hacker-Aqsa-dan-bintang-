@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Selamat Tahun Baru 2021 🎆</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: black;
+        font-family: 'Segoe UI', sans-serif;
+    }
+    canvas {
+        display: block;
+    }
+
+    .content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: white;
+        z-index: 10;
+        pointer-events: none;
+        animation: fadeIn 3s ease;
+    }
+
+    .content h1 {
+        font-size: 3.5em;
+        margin: 0;
+        color: #ffd700;
+        text-shadow: 0 0 10px gold, 0 0 30px gold;
+        animation: glow 2s infinite alternate;
+    }
+
+    .content h2 {
+        margin: 15px 0 0;
+        font-size: 2.2em;
+        text-shadow: 0 0 10px white;
+    }
+
+    .content p {
+        margin-top: 20px;
+        font-size: 1.5em;
+        color: #ddd;
+    }
+
+    @keyframes glow {
+        from { text-shadow: 0 0 10px gold; }
+        to { text-shadow: 0 0 30px gold; }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translate(-50%, -60%); }
+        to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+</style>
+</head>
+<body>
+
+<div class="content">
+    <h1>🎆 Selamat Tahun Baru 2021 🎆</h1>
+    <h2>Helmizan Arfanu Aqsa</h2>
+    <p>★ Bintang Adra Almuizzu ★</p>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+class Particle {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.radius = random(2, 4);
+        this.color = `hsl(${random(0,360)},100%,50%)`;
+        this.speedX = random(-5, 5);
+        this.speedY = random(-5, 5);
+        this.life = 100;
+    }
+
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life--;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
+}
+
+let particles = [];
+
+function createFirework() {
+    const x = random(0, canvas.width);
+    const y = random(0, canvas.height / 2);
+    for (let i = 0; i < 90; i++) {
+        particles.push(new Particle(x, y));
+    }
+}
+
+function animate() {
+    ctx.fillStyle = "rgba(0,0,0,0.2)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach((p, index) => {
+        p.update();
+        p.draw();
+        if (p.life <= 0) {
+            particles.splice(index, 1);
+        }
+    });
+
+    requestAnimationFrame(animate);
+}
+
+setInterval(createFirework, 800);
+animate();
+</script>
+
+</body>
+</html>
